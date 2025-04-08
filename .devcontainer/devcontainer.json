@@ -1,0 +1,8 @@
+
+{
+	"name": "nextjs",	
+	"image": "mcr.microsoft.com/devcontainers/base:alpine-3.21",
+	"remoteUser": "root",
+
+	"postCreateCommand": "/bin/sh /workspaces/nextjs/.devcontainer/setup.sh"
+}
