@@ -1,8 +1,6 @@
-
 {
-	"name": "nextjs",	
+	"name": "offer.digicom.com.np",	
 	"image": "mcr.microsoft.com/devcontainers/base:alpine-3.21",
 	"remoteUser": "root",
-
-	"postCreateCommand": "/bin/sh /workspaces/nextjs/.devcontainer/setup.sh"
+	"postCreateCommand": "/bin/sh /workspaces/offer.digicom.com.np/.devcontainer/setup.sh"
 }
