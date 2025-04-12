@@ -12,7 +12,7 @@ export default function RegisterOffer() {
     name: "",
     email: "",
     location: "",
-    image: null as File | null,
+    image: "",
     serial: "",
     mobile: "",
   });
@@ -28,7 +28,7 @@ export default function RegisterOffer() {
       Object.entries(form).forEach(([key, value]) => {
         if (value) data.append(key, value);
       });
-      await axios.post("/api/register/offer", data);
+      await axios.post("/api/register/", data);
       setMessage("Registered successfully");
     } catch (err) {
       setMessage("Failed to register");

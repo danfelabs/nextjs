@@ -126,7 +126,9 @@ export default function PhaseOne({ data, onChange, next }: Props) {
         className="w-full"
       />
 
-      {imagePreview && <img src={imagePreview} alt="Image Preview" className="mt-4 w-1/2 h-auto" />}
+      {imagePreview && (
+        <img src={imagePreview} alt="Preview" className="w-full rounded shadow" />
+      )}
 
       <button onClick={next} className="bg-red-500 text-white px-4 py-2 rounded">Next</button>
     </div>

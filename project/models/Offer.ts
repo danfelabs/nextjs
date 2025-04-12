@@ -26,7 +26,7 @@ const OfferSchema = new Schema({
   },
   image: {
     type: String,
-    required: false,
+    required: true,
   },
   createdAt: {
     type: Date,
