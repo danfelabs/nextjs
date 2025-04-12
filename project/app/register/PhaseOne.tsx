@@ -13,6 +13,7 @@ export default function PhaseOne({ data, onChange, next }: Props) {
   const [district, setDistrict] = useState("");
   const [palikaType, setPalikaType] = useState("");
   const [ward, setWard] = useState("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const LOCATION_DATA = locationData;
 
@@ -50,6 +51,7 @@ export default function PhaseOne({ data, onChange, next }: Props) {
     const result = await res.json();
     if (res.ok && result.url) {
       onChange("image", result.url);
+      setImagePreview(result.url); // Set image preview
     } else {
       alert("Failed to upload image");
     }
@@ -123,6 +125,8 @@ export default function PhaseOne({ data, onChange, next }: Props) {
         onChange={e => e.target.files && handleImageUpload(e.target.files[0])}
         className="w-full"
       />
+
+      {imagePreview && <img src={imagePreview} alt="Image Preview" className="mt-4 w-1/2 h-auto" />}
 
       <button onClick={next} className="bg-red-500 text-white px-4 py-2 rounded">Next</button>
     </div>

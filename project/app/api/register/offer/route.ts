@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/connectDB";
 import Offer from "@/models/Offer";
-import { writeFile } from "fs/promises";
-import path from "path";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
@@ -14,19 +12,20 @@ export async function POST(req: Request) {
     const location = formData.get("location") as string;
     const mobile = formData.get("mobile") as string;
     const serial = formData.get("serial") as string;
-    const image = formData.get("image") as File;
+    const image = formData.get("image") as string;  // This will be a URL string
 
-    let imagePath = "";
-    if (image) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const filename = `${Date.now()}_${image.name}`;
-      const filePath = path.join(process.cwd(), "public/uploads", filename);
-      await writeFile(filePath, buffer);
-      imagePath = `/uploads/${filename}`;
+    // Check if the serial number already exists
+    const existingOffer = await Offer.findOne({ serial });
+
+    if (existingOffer) {
+      return NextResponse.json(
+        { success: false, error: "Serial number already exists" },
+        { status: 400 }
+      );
     }
 
-    await Offer.create({ name, email, location, mobile, serial, image: imagePath });
+    // Save the offer along with the image URL
+    await Offer.create({ name, email, location, mobile, serial, image });
 
     return NextResponse.json({ success: true });
   } catch (error) {

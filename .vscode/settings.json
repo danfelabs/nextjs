@@ -1,15 +1,14 @@
 {
-    "files.exclude": {
-      "**/.next": true,
-      "**/node_modules": false,
-      "**/.env": false,
-      "**/.git": true,
-      "**/dist": true,
-      "**/build": true,
-      "**/coverage": true,
-      "**/out": true,
-      "**/package-lock.json": false,
-      "**/.gitignore": true
-    }
+  "files.exclude": {
+    "**/.next": true,
+    "**/node_modules": true,
+    "**/.env": false,
+    "**/.git": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/coverage": true,
+    "**/out": true,
+    "**/package-lock.json": true,
+    "**/.gitignore": true
   }
-  
+}
