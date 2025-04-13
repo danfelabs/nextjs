@@ -1,13 +1,13 @@
 import RegisterOffer from "@/app/register/RegisterOffer";
+import Header from "@components/Header";
 
 export default function Home() {
   return (
     <div>
-      <main>
-
+      <Header />
+      <main className="mt-16">
         <RegisterOffer />
-
-      </main>      
+      </main>
     </div>
   );
 }

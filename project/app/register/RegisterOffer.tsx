@@ -36,11 +36,16 @@ export default function RegisterOffer() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 border rounded">
-      {step === 0 && <PhaseOne data={form} onChange={handleChange} next={() => setStep(1)} />}
-      {step === 1 && <PhaseTwo data={form} onChange={handleChange} next={() => setStep(2)} back={() => setStep(0)} />}
-      {step === 2 && <PhaseThree data={form} onChange={handleChange} submit={handleSubmit} back={() => setStep(1)} />}
-      {message && <p className="text-center text-sm mt-4">{message}</p>}
+    <div className="flex justify-center items-start pt-8 bg-gray-100 dark:bg-base-200 p-8">
+      <div className="w-full max-w-4xl bg-white dark:bg-base-300 rounded-lg shadow-md">
+        {/* Conditional rendering based on step */}
+        {step === 0 && <PhaseOne data={form} onChange={handleChange} next={() => setStep(1)} />}
+        {step === 1 && <PhaseTwo data={form} onChange={handleChange} next={() => setStep(2)} back={() => setStep(0)} />}
+        {step === 2 && <PhaseThree data={form} onChange={handleChange} submit={handleSubmit} back={() => setStep(1)} />}
+        
+        {/* Message to display feedback */}
+        {message && <p className="text-center text-sm mt-4 text-red-500 dark:text-red-400">{message}</p>}
+      </div>
     </div>
   );
 }

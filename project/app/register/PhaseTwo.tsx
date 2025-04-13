@@ -25,50 +25,84 @@ export default function PhaseTwo({ data, onChange, next, back }: Props) {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-bold">Phase 2: Serial Number</h2>
+    <div className="space-y-6 p-6 bg-base-200 dark:bg-base-900 rounded-lg shadow-md">
 
-      {/* Disabled serial number input field */}
-      <input
-        type="text"
-        placeholder="Serial Number"
-        value={data.serial}
-        onChange={(e) => onChange("serial", e.target.value)}
-        className="w-full border p-2 rounded"
-        disabled
-      />
+        <div className="mb-8">
+          <div className="flex items-center justify-between text-sm font-semibold text-gray-400">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-600 text-gray-400">1</div>
+              <span className="hidden sm:inline">Personal Information</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-base-900 font-bold border border-base-300">2</div>
+              <span className="text-white">Serial Number Verification</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-600 text-gray-400">3</div>
+              <span className="hidden sm:inline">Mobile Number Verification</span>
+            </div>
+          </div>
 
-      {/* Show 'Next' button only when serial numbers are detected */}
-      {serialNumbers.length > 0 && (
-        <div>
-          <button
-            onClick={next}
-            className="bg-red-500 text-white px-4 py-2 rounded mt-4"
-          >
-            Next
-          </button>
+           <p className="mt-2 text-sm text-gray-400">Please scan the SN located just below the barcode as shown below:</p>
         </div>
-      )}
 
+      <div className="space-y-4">       
+        
+        <img
+          src="images/sample-image-sn.jpg"
+          alt="Sample Serial Number"
+          className="rounded-lg w-full max-w-md border border-gray-700"
+        />
+      </div> 
+    
       {/* OCR scanning component */}
       <OCR
         onSerialDetected={handleSerialDetected}
       />
 
-      {/* Add More button below video */}
+      {/* Serial Number Field (Styled Centered Input) */}
+      <div className="flex justify-center my-4">
+        <input
+          type="text"
+          placeholder="Scanned serial number"
+          value={data.serial}
+          className="input input-bordered text-center text-md font-semibold w-full max-w-md"
+          disabled
+        />
+      </div>
+
+      {/* Add More Button with Icon */}
       {serialNumbers.length > 0 && (
-        <button
-          onClick={handleAddMore}
-          className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-        >
-          Add More Serial Numbers
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={handleAddMore}
+            className="btn btn-outline flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add More Serial Numbers
+          </button>
+        </div>
       )}
 
-      <div className="flex justify-between mt-4">
-        <button onClick={back} className="px-4 py-2 border rounded">
-          Back
+      {/* Navigation Buttons */}
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={back}
+          className="btn btn-ghost text-white dark:text-gray-300 hover:bg-gray-700 dark:hover:bg-gray-600"
+        >
+          BACK
         </button>
+
+        {serialNumbers.length > 0 && (
+          <button
+            onClick={next}
+            className="btn btn-ghost text-white dark:text-gray-300 hover:bg-gray-700 dark:hover:bg-gray-600 animate-pulse"
+          >
+            NEXT
+          </button>
+        )}
       </div>
     </div>
   );

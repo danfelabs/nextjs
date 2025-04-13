@@ -4,37 +4,37 @@ import { useRef, useEffect, useState } from "react";
 import Tesseract from "tesseract.js";
 
 interface OCRProps {
-  onSerialDetected: (serial: string) => void; // Only serial number detection here
+  onSerialDetected: (serial: string) => void;
 }
 
 export default function OCR({ onSerialDetected }: OCRProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [serialNumbers, setSerialNumbers] = useState<string[]>([]);
+  const [scanning, setScanning] = useState(true);
 
-  // Start camera feed on component mount
   useEffect(() => {
     const startCamera = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" }, // Use back camera
+        video: { facingMode: "environment" },
       });
-
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
       }
     };
-
     startCamera();
-
     return () => {
-      if (videoRef.current) {
-        videoRef.current.srcObject = null; // Cleanup the stream
-      }
+      if (videoRef.current) videoRef.current.srcObject = null;
     };
   }, []);
 
-  // Function to process OCR and extract SN numbers
+  const stopCamera = () => {
+    const stream = videoRef.current?.srcObject as MediaStream;
+    stream?.getTracks().forEach(track => track.stop());
+    videoRef.current!.srcObject = null;
+  };
+
   const scanForSerialNumber = () => {
     if (!videoRef.current || !canvasRef.current) return;
 
@@ -44,46 +44,41 @@ export default function OCR({ onSerialDetected }: OCRProps) {
 
     canvasRef.current.width = width;
     canvasRef.current.height = height;
+    context?.drawImage(videoRef.current, 0, 0, width, height);
 
-    context?.drawImage(videoRef.current, 0, 0, width, height); // Capture frame
-
-    // Use Tesseract.js to run OCR
-    Tesseract.recognize(
-      canvasRef.current,
-      "eng",
-      {
-        logger: (m) => console.log(m), // Optional logger
-      }
-    ).then(({ data: { text } }) => {
+    Tesseract.recognize(canvasRef.current, "eng", {
+      logger: (m) => console.log(m),
+    }).then(({ data: { text } }) => {
       const serialNumberRegex = /SN:\s*(\w+[\d\w]*)/i;
       const match = text.match(serialNumberRegex);
-
       if (match && match[1]) {
         const newSerial = match[1];
         if (!serialNumbers.includes(newSerial)) {
           setSerialNumbers((prev) => [...prev, newSerial]);
-          onSerialDetected(newSerial); // Trigger callback to update serial
+          onSerialDetected(newSerial);
+          setScanning(false);
+          stopCamera();
         }
       }
     });
   };
 
-  // Call scanForSerialNumber every 3 seconds to capture and process video frames
   useEffect(() => {
-    const interval = setInterval(() => {
-      scanForSerialNumber();
-    }, 3000); // Scan every 3 seconds
-
-    return () => clearInterval(interval);
-  }, [serialNumbers]);
+    if (scanning) {
+      const interval = setInterval(scanForSerialNumber, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [serialNumbers, scanning]);
 
   return (
-    <div className="relative">
-      {/* Video Feed */}
-      <video ref={videoRef} style={{ display: "block" }} className="w-full h-auto" />
-
-      {/* Hidden canvas for OCR processing */}
-      <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+    <div className="relative w-full max-w-md mx-auto border rounded overflow-hidden">
+      <video
+        ref={videoRef}
+        className="w-full aspect-[3/1] object-cover"
+        muted
+        playsInline
+      />
+      <canvas ref={canvasRef} style={{ display: "none" }}></canvas>     
     </div>
   );
 }

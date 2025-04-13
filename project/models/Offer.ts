@@ -10,6 +10,7 @@ const OfferSchema = new Schema({
     type: String,
     required: true,
     lowercase: true,
+    unique: true,
   },
   location: {
     type: String,
@@ -18,6 +19,7 @@ const OfferSchema = new Schema({
   mobile: {
     type: String,
     required: true,
+    unique: true,
   },
   serial: {
     type: String,
